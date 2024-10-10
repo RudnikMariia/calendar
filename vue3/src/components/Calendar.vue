@@ -1,22 +1,34 @@
-<!-- src/components/Calendar.vue -->
 <template>
-  <FullCalendar
-      class="calendar"
-      :options="calendarOptions"
-  >
-    <template v-slot:eventContent="arg">
-      <b>{{ arg.timeText }}</b>
-      <i>{{ arg.event.title }}</i>
-    </template>
-  </FullCalendar>
+  <div>
+    <FullCalendar
+        class="calendar"
+        :options="calendarOptions"
+    >
+      <template v-slot:eventContent="arg">
+        <b>{{ arg.timeText }}</b>
+        <i>{{ arg.event.title }}</i>
+      </template>
+    </FullCalendar>
+
+    <!-- Event Popup -->
+    <EventPopup
+        v-if="isPopupVisible"
+        :event="selectedEvent"
+        :show="isPopupVisible"
+        @update="updateEvent"
+        @close="closePopup"
+    />
+  </div>
 </template>
 
 <script setup>
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
+import { ref } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import {INITIAL_EVENTS, createEventId} from '../utils/event-utils';
+import EventPopup from './Modal.vue';
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -33,9 +45,9 @@ const calendarOptions = {
   dayMaxEvents: true,
   weekends: true,
   select(selectInfo) {
-    let title = prompt('Please enter a new title for your event')
-    let calendarApi = selectInfo.view.calendar
-    calendarApi.unselect()
+    let title = prompt('Please enter a new title for your event');
+    let calendarApi = selectInfo.view.calendar;
+    calendarApi.unselect();
 
     if (title) {
       calendarApi.addEvent({
@@ -44,47 +56,45 @@ const calendarOptions = {
         start: selectInfo.startStr,
         end: selectInfo.endStr,
         allDay: selectInfo.allDay,
-      })
+      });
     }
   },
   eventClick(clickInfo) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove()
-    }
+    openPopup(clickInfo.event);
   },
   eventsSet(events) {
     // Update the events in the parent component
   },
+};
+
+const selectedEvent = ref(null);
+const isPopupVisible = ref(false);
+
+function openPopup(event) {
+  selectedEvent.value = {...event};
+  console.log(selectedEvent)
+  isPopupVisible.value = true;
+}
+
+function updateEvent(updatedEvent) {
+  console.log(selectedEvent)
+  const calendarApi = selectedEvent.value?.calendar;
+  if (calendarApi) {
+    const event = calendarApi.getEventById(updatedEvent.id);
+    event.setProp('title', updatedEvent.title);
+    event.setStart(updatedEvent.start);
+    event.setEnd(updatedEvent.end);
+  }
+  isPopupVisible.value = false;
+}
+
+// Закриває модалку
+function closePopup() {
+  isPopupVisible.value = false;
+  selectedEvent.value = null;
 }
 </script>
 
 <style scoped>
-.calendar {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.fc .fc-daygrid-day-frame {
-  height: 135px;
-  padding-top: 17px;
-  padding-right: 15px;
-  color: #43425D;
-  font-size: 15px;
-}
-
-.fc .fc-daygrid-day.fc-day-today {
-  background-color: #F5F6FA;
-}
-
-.fc-h-event {
-  background-color: #3B86FF;
-  color: #FFFFFF;
-}
-
-.fc-daygrid-event {
-  padding: 7px 0 7px 14px;
-  font-size: 13px;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
+/* Ваш стиль для календаря */
 </style>
