@@ -1,13 +1,12 @@
 <template>
   <MainLayout :currentEvents="currentEvents" @toggleWeekends="handleWeekendsToggle">
-    <Calendar />
+    <router-view></router-view>
   </MainLayout>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import MainLayout from './layouts/MainLayout.vue'
-import Calendar from './components/Calendar.vue'
 
 const currentEvents = ref([])
 

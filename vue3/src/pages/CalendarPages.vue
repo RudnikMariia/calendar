@@ -30,7 +30,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import {INITIAL_EVENTS, createEventId} from '../utils/event-utils';
-import EventPopup from './Modal.vue';
+import EventPopup from '../components/Modal.vue';
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -44,14 +44,14 @@ const calendarOptions = {
     next: 'Next',
     today: 'Today',
   },
-  initialView: 'timeGridDay', // Перегляд дня по годинах
+  initialView: 'timeGridDay',
   initialEvents: INITIAL_EVENTS,
   editable: true,
   selectable: true,
   selectMirror: true,
   dayMaxEvents: true,
   weekends: true,
-  nowIndicator: true, // Додає лінію поточного часу
+  nowIndicator: true,
   select(selectInfo) {
     let title = prompt('Please enter a new title for your event');
     let calendarApi = selectInfo.view.calendar;
@@ -106,7 +106,7 @@ function updateEvent(updatedEvent) {
 function closePopup() {
   isPopupVisible.value = false;
   selectedEvent.value = null;
-  }
+}
 </script>
 
 <style lang="css">
