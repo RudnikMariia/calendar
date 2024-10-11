@@ -1,26 +1,13 @@
 <!-- src/components/Sidebar.vue -->
 <template>
   <div class="sidebar">
-    <div class="sidebar-section">
-      <h2>Instructions</h2>
-      <ul>
-        <li>Select dates and you will be prompted to create a new event</li>
-        <li>Drag, drop, and resize events</li>
-        <li>Click an event to delete it</li>
-      </ul>
+    <div class="sidebar-title">
+      <div>IMPEKABLE</div>
     </div>
     <div class="sidebar-section">
-      <label>
-        <input type="checkbox" :checked="weekends" @change="$emit('toggleWeekends')" />
-        toggle weekends
-      </label>
-    </div>
-    <div class="sidebar-section">
-      <h2>All Events ({{ currentEvents.length }})</h2>
       <ul>
-        <li v-for="event in currentEvents" :key="event.id">
-          <b>{{ event.startStr }}</b> — <i>{{ event.title }}</i>
-        </li>
+        <li><img src="../assets/images/home.svg" alt="home"> Home</li>
+        <li><img src="../assets/images/calendar.svg" alt="calendar">Calendar</li>
       </ul>
     </div>
   </div>
@@ -35,24 +22,41 @@ const props = defineProps({
 
 <style scoped>
 .sidebar {
-  width: 300px;
-  padding: 20px;
-  background-color: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
+  width: 260px;
+  background-color: #43425D;
+  color: #FFFFFF;
+  font-size: 15px;
+}
+
+.sidebar-title {
+  font-weight: bold;
+  padding: 26px 20px;
+  background: #3C3B53;
+  letter-spacing: 3px;
+  font-size: 16px;
+  color: #FFFFFF;
 }
 
 .sidebar-section {
-  padding: 2em;
+  font-weight: 400;
+  padding: 0 20px;
 }
 
-h2 {
+.sidebar-section li {
   margin: 0;
-  font-size: 16px;
+  padding: 20px 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.sidebar-section li img{
+  margin-right: 11px;
 }
 
 ul {
   margin: 0;
-  padding: 0 0 0 1.5em;
+  padding: 0;
+  list-style-type: none;
 }
 
 li {
