@@ -11,15 +11,26 @@
         <i>{{ arg.event.title }}</i>
       </template>
     </FullCalendar>
+
+    <!-- Event Popup -->
+    <EventPopup
+        v-if="isPopupVisible"
+        :event="selectedEvent"
+        :show="isPopupVisible"
+        @update="updateEvent"
+        @close="closePopup"
+    />
   </div>
 </template>
 
 <script setup>
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from '../utils/event-utils'
+import { ref } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import {INITIAL_EVENTS, createEventId} from '../utils/event-utils';
+import EventPopup from './Modal.vue';
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -42,9 +53,9 @@ const calendarOptions = {
   weekends: true,
   nowIndicator: true, // Додає лінію поточного часу
   select(selectInfo) {
-    let title = prompt('Please enter a new title for your event')
-    let calendarApi = selectInfo.view.calendar
-    calendarApi.unselect()
+    let title = prompt('Please enter a new title for your event');
+    let calendarApi = selectInfo.view.calendar;
+    calendarApi.unselect();
 
     if (title) {
       calendarApi.addEvent({
@@ -53,13 +64,11 @@ const calendarOptions = {
         start: selectInfo.startStr,
         end: selectInfo.endStr,
         allDay: selectInfo.allDay,
-      })
+      });
     }
   },
   eventClick(clickInfo) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove()
-    }
+    openPopup(clickInfo.event);
   },
   eventsSet(events) {
     // Update the events in the parent component
@@ -72,6 +81,32 @@ const calendarOptions = {
     hour12: true,  // Включає 12-годинний формат
   },
 }
+const selectedEvent = ref(null);
+const isPopupVisible = ref(false);
+
+function openPopup(event) {
+  selectedEvent.value = {...event};
+  console.log(selectedEvent)
+  isPopupVisible.value = true;
+}
+
+function updateEvent(updatedEvent) {
+  console.log(selectedEvent)
+  const calendarApi = selectedEvent.value?.calendar;
+  if (calendarApi) {
+    const event = calendarApi.getEventById(updatedEvent.id);
+    event.setProp('title', updatedEvent.title);
+    event.setStart(updatedEvent.start);
+    event.setEnd(updatedEvent.end);
+  }
+  isPopupVisible.value = false;
+}
+
+// Закриває модалку
+function closePopup() {
+  isPopupVisible.value = false;
+  selectedEvent.value = null;
+  }
 </script>
 
 <style lang="css">
