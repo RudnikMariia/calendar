@@ -1,9 +1,30 @@
-<!-- src/layouts/MainLayout.vue -->
 <template>
   <div class="layout">
     <Sidebar :currentEvents="currentEvents" @toggleWeekends="handleWeekendsToggle" />
-    <div class="layout-content">
-      <slot></slot>
+    <div class="layout-wrap">
+      <div class="header">
+        <div class="search-wrap">
+          <img src="../assets/images/icon_search.svg" alt="search">
+          <input type="text" class="no-border-input" placeholder="Search transactions, invoices or help">
+        </div>
+        <div class="header-menu">
+          <div class="header-img-menu">
+            <img src="../assets/images/circle.svg" alt="circle">
+            <img src="../assets/images/massage.svg" alt="massage">
+            <img src="../assets/images/call.svg" alt="call">
+          </div>
+          <div class="header-user">
+          <span>
+            John Doe
+            <img src="../assets/images/arrow.svg" alt="arrow">
+          </span>
+            <div class="header-user-avatar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="layout-content">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -23,58 +44,82 @@ const props = defineProps({
   min-height: 100vh;
 }
 
-.layout-content {
+.layout-wrap {
   flex-grow: 1;
+}
+
+.layout-content {
   padding: 3em;
   max-width: 1100px;
   margin: 0 auto;
+  background: #F0F0F7;
 }
 
-.fc-toolbar-title {
-  color: #4D4F5C;
-  font-size: 18px !important;
-  font-weight: 400;
+.header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.fc-button-group {
-  box-shadow: 0px 2px 3px #0000000D;
+.header-user {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
 }
 
-.fc-button {
-  background-color: #FFFFFF !important;
-  border: 1px solid #D7DAE2 !important;
-  color: #4D4F5C !important;
-  padding: 8px 16px !important;
-  text-transform: capitalize !important;
+.header-user img {
+  margin-left: 13px;
 }
 
-.fc-button-active {
-  color: #3B86FF !important;
+.header-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50px;
+  background: #43425D;
+  margin-left: 11px;
 }
 
-.fc .fc-button-primary:not(:disabled).fc-button-active:focus,
-.fc .fc-button-primary:not(:disabled):active:focus {
-  box-shadow: none !important;
+/* Стилі для інпуту без бордерів */
+.no-border-input {
+  border: none;
+  outline: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  width: 230px;
 }
 
-.fc-col-header-cell {
-  padding-bottom: 16px !important;
-  padding-top: 16px !important;
-  background: #F5F6FA;
-  border: none !important;
+.no-border-input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
-.fc-col-header {
-  border: 1px solid #EAF0F4;
-  text-transform: uppercase;
-  font-size: 11px !important;
-  color: #A3A6B4 !important;
+.search-wrap {
+  display: flex;
+  align-items: center;
+}
+.search-wrap img {
+  margin-bottom: 3px;
 }
 
-.fc-theme-standard .fc-scrollgrid,
-.fc-theme-standard td,
-.fc-theme-standard th {
-  border: 1px solid #EAF0F4 !important;
-  border-collapse: collapse;
+.header-menu {
+  display: flex;
+  align-items: center;
+}
+.header-img-menu {
+  border-right: 1px solid #EBEBF2;
+  margin-right: 21px;
+  height: 28px;
+  padding-right: 13px;
+  display: flex;
+  align-items: center;
+}
+.header-img-menu img {
+  margin-left: 30px;
+  width: 16px;
+  height: 16px;
 }
 </style>
